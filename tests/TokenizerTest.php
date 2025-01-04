@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 class TokenizerTest extends TestCase
 {
     #[DataProvider('provideTokenize')]
-    public function testTokenize(string $expression, array $tokens): void
+    public function testTokenize(string $expression, array $expectedTokens): void
     {
     }
 
