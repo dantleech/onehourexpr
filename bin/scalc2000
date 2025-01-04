@@ -4,6 +4,7 @@
 use DTL\OneHourExp\Evaluator;
 use DTL\OneHourExp\Node;
 use DTL\OneHourExp\Node\BinaryNode;
+use DTL\OneHourExp\Node\BinaryOp;
 use DTL\OneHourExp\Node\IntegerNode;
 use DTL\OneHourExp\Parser;
 use DTL\OneHourExp\Tokenizer;
@@ -20,37 +21,46 @@ while (true) {
     echo "\e[0m";
 
     if (!class_exists(Tokenizer::class)) {
+        echo "\e[32m";
         echo sprintf("%s does not exist\n", Tokenizer::class);
+        echo "\e[0m";
         continue;
     }
 
-    $tokens = (new Tokenizer((string)$expression))->tokenize();
-    echo "Tokens:\n\n";
-    foreach ($tokens as $token) {
-        echo sprintf("  [%s, %s]\n", $token->type, (string)json_encode($token->value, JSON_UNESCAPED_SLASHES));
+    try {
+
+        $tokens = (new Tokenizer((string)$expression))->tokenize();
+        echo "Tokens:\n\n";
+        foreach ($tokens as $token) {
+            echo sprintf("  [%s, %s]\n", $token->type, (string)json_encode($token->value, JSON_UNESCAPED_SLASHES));
+        }
+        echo "\n";
+
+        if (!class_exists(Parser::class)) {
+            echo sprintf("%s does not exist\n", Parser::class);
+            continue;
+        }
+
+        $ast = (new Parser($tokens))->parse();
+        echo "AST:\n\n";
+        echo dump_ast($ast, 1);
+        echo "\n";
+        echo "\n";
+
+        if (!class_exists(Evaluator::class)) {
+            echo sprintf("%s does not exist\n", Evaluator::class);
+            continue;
+        }
+
+        $result = (new Evaluator())->evaluate($ast);
+        echo "Result: ";
+        echo json_encode($result, JSON_UNESCAPED_SLASHES);
+        echo "\n\n";
+    } catch (Throwable $e) {
+        echo "\e[31m";
+        echo sprintf("%s\n", $e->getMessage());
+        echo "\e[0m";
     }
-    echo "\n";
-
-    if (!class_exists(Parser::class)) {
-        echo sprintf("%s does not exist\n", Parser::class);
-        continue;
-    }
-
-    $ast = (new Parser($tokens))->parse();
-    echo "AST:\n\n";
-    echo dump_ast($ast, 1);
-    echo "\n";
-    echo "\n";
-
-    if (!class_exists(Evaluator::class)) {
-        echo sprintf("%s does not exist\n", Evaluator::class);
-        continue;
-    }
-
-    $result = (new Evaluator())->evaluate($ast);
-    echo "Result: ";
-    echo json_encode($result, JSON_UNESCAPED_SLASHES);
-    echo "\n\n";
 }
 
 function dump_ast(Node $node, int $level = 0): string
@@ -59,7 +69,7 @@ function dump_ast(Node $node, int $level = 0): string
     if ($node instanceof IntegerNode) {
         return sprintf("%sInteger(%s)", $indent, $node->value);
     }
-    if ($node instanceof BinaryNode) {
+    if ($node instanceof BinaryOp) {
         return sprintf(
             "%sBinary(\n%s\n%s%s%s\n%s\n%s)",
             $indent,
@@ -71,4 +81,9 @@ function dump_ast(Node $node, int $level = 0): string
             $indent,
         );
     }
+
+    throw new RuntimeException(sprintf(
+        'Do not know how printer: %s',
+        $node::class
+    ));
 }
