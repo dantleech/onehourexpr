@@ -10,11 +10,15 @@ use PHPUnit\Framework\TestCase;
 class ParserTest extends TestCase
 {
     #[DataProvider('provideParse')]
-    public function testParse(string $expression, Node $expectedNode): void
+    public function testParse(string $expression, ?Node $expectedNode): void
     {
     }
 
     public static function provideParse(): Generator
     {
+        yield [
+            '1',
+            null,
+        ];
     }
 }

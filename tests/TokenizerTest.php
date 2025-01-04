@@ -15,5 +15,9 @@ class TokenizerTest extends TestCase
 
     public static function provideTokenize(): Generator
     {
+        yield [
+            '1',
+            [],
+        ];
     }
 }
