@@ -3,7 +3,6 @@
 
 use DTL\OneHourExp\Evaluator;
 use DTL\OneHourExp\Node;
-use DTL\OneHourExp\Node\BinaryNode;
 use DTL\OneHourExp\Node\BinaryOp;
 use DTL\OneHourExp\Node\IntegerNode;
 use DTL\OneHourExp\Parser;
@@ -13,17 +12,13 @@ require __DIR__ . '/../vendor/autoload.php';
 
 
 while (true) {
-    echo "\e[32m";
-    echo 'SCALC2K $ ';
-    echo "\e[0m";
+    echo info('SCALC2K $ ');
     echo "\e[36m";
     $expression = readline();
     echo "\e[0m";
 
     if (!class_exists(Tokenizer::class)) {
-        echo "\e[32m";
-        echo sprintf("%s does not exist\n", Tokenizer::class);
-        echo "\e[0m";
+        error(sprintf("%s does not exist\n", Tokenizer::class));
         continue;
     }
 
@@ -32,12 +27,16 @@ while (true) {
         $tokens = (new Tokenizer((string)$expression))->tokenize();
         echo "Tokens:\n\n";
         foreach ($tokens as $token) {
-            echo sprintf("  [%s, %s]\n", $token->type, (string)json_encode($token->value, JSON_UNESCAPED_SLASHES));
+            echo sprintf(
+                "  [%s, %s]\n",
+                $token->type->value,
+                (string)json_encode($token->value, JSON_UNESCAPED_SLASHES)
+            );
         }
         echo "\n";
 
         if (!class_exists(Parser::class)) {
-            echo sprintf("%s does not exist\n", Parser::class);
+            echo error(sprintf("%s does not exist\n", Parser::class));
             continue;
         }
 
@@ -48,7 +47,7 @@ while (true) {
         echo "\n";
 
         if (!class_exists(Evaluator::class)) {
-            echo sprintf("%s does not exist\n", Evaluator::class);
+            echo error(sprintf("%s does not exist\n", Evaluator::class));
             continue;
         }
 
@@ -57,9 +56,7 @@ while (true) {
         echo json_encode($result, JSON_UNESCAPED_SLASHES);
         echo "\n\n";
     } catch (Throwable $e) {
-        echo "\e[31m";
-        echo sprintf("%s\n", $e->getMessage());
-        echo "\e[0m";
+        echo error($e->getMessage());
     }
 }
 
@@ -87,3 +84,13 @@ function dump_ast(Node $node, int $level = 0): string
         $node::class
     ));
 }
+
+function info(string $message): string
+{
+    return "\e[32m" . $message . "\e[0m";
+}
+function error(string $message): string
+{
+    return "\e[31m" . $message . "\e[0m\n";
+}
+
