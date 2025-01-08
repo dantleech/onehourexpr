@@ -15,7 +15,7 @@ class EvaluatorTest extends TestCase
 
     public static function provideEvaluate(): Generator
     {
-        yield 'identity' => [
+        yield 'one' => [
             '1',
             1,
         ];
