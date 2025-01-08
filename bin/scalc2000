@@ -4,6 +4,7 @@
 use DTL\OneHourExp\Evaluator;
 use DTL\OneHourExp\Node;
 use DTL\OneHourExp\Node\BinaryOp;
+use DTL\OneHourExp\Node\BinaryOpNode;
 use DTL\OneHourExp\Node\IntegerNode;
 use DTL\OneHourExp\Parser;
 use DTL\OneHourExp\Tokenizer;
@@ -43,7 +44,7 @@ while (true) {
             continue;
         }
 
-        $ast = (new Parser($tokens))->parse();
+        $ast = (new Parser())->parse($tokens);
         echo "AST:\n\n";
         echo dump_ast($ast, 1);
         echo "\n";
@@ -69,7 +70,7 @@ function dump_ast(Node $node, int $level = 0): string
     if ($node instanceof IntegerNode) {
         return sprintf("%sInteger(%s)", $indent, $node->value);
     }
-    if ($node instanceof BinaryOp) {
+    if ($node instanceof BinaryOp || $node instanceof BinaryOpNode) {
         return sprintf(
             "%sBinary(\n%s\n%s%s%s\n%s\n%s)",
             $indent,
