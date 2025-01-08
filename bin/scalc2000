@@ -27,12 +27,12 @@ while (true) {
 
     try {
 
-        $tokens = (new Tokenizer((string)$expression))->tokenize();
+        $tokens = (new Tokenizer())->tokenize((string)$expression);
         echo "Tokens:\n\n";
         foreach ($tokens as $token) {
             echo sprintf(
                 "  [%s, %s]\n",
-                $token->type->value,
+                $token->type->name,
                 (string)json_encode($token->value, JSON_UNESCAPED_SLASHES)
             );
         }
