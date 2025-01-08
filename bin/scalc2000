@@ -16,9 +16,12 @@ while (true) {
     echo "\e[36m";
     $expression = readline();
     echo "\e[0m";
+    if ($expression === '') {
+        continue;
+    }
 
     if (!class_exists(Tokenizer::class)) {
-        error(sprintf("%s does not exist\n", Tokenizer::class));
+        echo error(sprintf("%s does not exist\n", Tokenizer::class));
         continue;
     }
 
