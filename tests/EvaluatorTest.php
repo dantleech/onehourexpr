@@ -1,6 +1,6 @@
 <?php
 
-namespace DTL\OneHourExp\Tests;
+namespace Workshop\Tests;
 
 use Generator;
 use PHPUnit\Framework\Attributes\DataProvider;

@@ -1,6 +1,6 @@
 <?php
 
-namespace DTL\OneHourExp\Tests;
+namespace Workshop\Tests;
 
 use DTL\OneHourExp\Node;
 use Generator;

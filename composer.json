@@ -9,12 +9,12 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "DTL\\OneHourExp\\": "src/"
+            "Workshop\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "DTL\\OneHourExp\\Tests\\": "tests/"
+            "Workshop\\Tests\\": "tests/"
         }
     },
     "authors": [
